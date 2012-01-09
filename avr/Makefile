@@ -52,9 +52,9 @@ SRC =	$(TARGET).c oven_ssr.c oven_timing.c oven_pid.c oven_profile.c max6675.c u
 # type "make clean" after changing this, so all files will be rebuilt
 #
 #MCU = at90usb162       # Teensy 1.0
-#MCU = atmega32u4        # Teensy 2.0
+MCU = atmega32u4        # Teensy 2.0
 #MCU = at90usb646       # Teensy++ 1.0
-MCU = at90usb1286      # Teensy++ 2.0
+#MCU = at90usb1286      # Teensy++ 2.0
 
 
 # Processor frequency.
@@ -268,10 +268,10 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = stk500v2
+AVRDUDE_PROGRAMMER =buspirate 
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
-AVRDUDE_PORT = com1    # programmer connected to serial device
+AVRDUDE_PORT = /dev/cu.usbserial-A900fzV1    # programmer connected to serial device
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
