@@ -1,0 +1,13 @@
+== Reflow controller ==
+---
+
+=== Summary ===
+
+This controlls a reflow oven using a Atmega32u4 mcu, MAX6675 thermocouple chip, K-type thermocouple and solid state relay.
+
+
+=== Credits ===
+
+This code is forked from Dan Strother's reflow controller code here: http://code.danstrother.com/reflow_controller
+
+I've made modififcations to make it work with my atmega32u4 instead of the default at90usb1267
