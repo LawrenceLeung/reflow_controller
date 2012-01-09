@@ -1,6 +1,6 @@
 /* USB Serial Example for Teensy USB Development Board
- * http://www.pjrc.com/teensy/
- * Copyright (c) 2008,2010 PJRC.COM, LLC
+ * http://www.pjrc.com/teensy/usb_serial.html
+ * Copyright (c) 2008,2010,2011 PJRC.COM, LLC
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 // Version 1.4: added usb_serial_write
 // Version 1.5: add support for Teensy 2.0
 // Version 1.6: fix zero length packet bug
+// Version 1.7: fix usb_serial_set_control
 
 #define USB_SERIAL_PRIVATE_INCLUDE
 #include "usb_serial.h"
@@ -41,8 +42,8 @@
 
 // You can change these to give your code its own name.  On Windows,
 // these are only used before an INF file (driver install) is loaded.
-#define STR_MANUFACTURER	L"Your Name"
-#define STR_PRODUCT		L"USB Serial"
+#define STR_MANUFACTURER	L"Jigsaw"
+#define STR_PRODUCT		L"Reflow Oven 1.0"
 
 // All USB serial devices are supposed to have a serial number
 // (according to Microsoft).  On windows, a new COM port is created
@@ -669,8 +670,6 @@ uint8_t usb_serial_get_control(void)
 // it remains buffered (either here or on the host) and can not be
 // lost because you weren't listening at the right time, like it
 // would in real serial communication.
-// TODO: this function is untested.  Does it work?  Please email
-// paul@pjrc.com if you have tried it....
 int8_t usb_serial_set_control(uint8_t signals)
 {
 	uint8_t intr_state;
@@ -695,12 +694,11 @@ int8_t usb_serial_set_control(uint8_t signals)
 	UEDATX = 0x20;
 	UEDATX = 0;
 	UEDATX = 0;
-	UEDATX = 0; // TODO: should this be 1 or 0 ???
+	UEDATX = 0; // 0 seems to work nicely.  what if this is 1??
 	UEDATX = 0;
-	UEDATX = 2;
+	UEDATX = 1;
 	UEDATX = 0;
 	UEDATX = signals;
-	UEDATX = 0;
 	UEINTX = 0x3A;
 	SREG = intr_state;
 	return 0;
