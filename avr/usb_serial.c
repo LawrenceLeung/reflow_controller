@@ -60,7 +60,7 @@
 // Udev rules (in /etc/udev/rules.d) can define persistent device
 // names linked to this serial number, as well as permissions, owner
 // and group settings.
-#define STR_SERIAL_NUMBER	L"12345"
+#define STR_SERIAL_NUMBER	L"73510"
 
 // Mac OS-X and Linux automatically load the correct drivers.  On
 // Windows, even though the driver is supplied by Microsoft, an

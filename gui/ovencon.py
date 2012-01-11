@@ -69,7 +69,7 @@ class OvenMsg():
         m               = msg.split(',')
         if(len(m) != 8):
             return 0
-
+        
         self.state      = m.pop(0)
         self.time       = int(m.pop(0))*0.25
         self.target     = int(m.pop(0))*0.25
@@ -116,7 +116,7 @@ class OvenComm(QtCore.QObject):
     newSenseT = QtCore.pyqtSignal(float)
     newSenseB = QtCore.pyqtSignal(float)
 
-    def __init__(self,parent=None,port='/dev/ttyUSB000'):
+    def __init__(self,parent=None,port='/dev/cu.usbmodem73510'):
         """Opens specified serial port and starts comm thread."""
 
         super(OvenComm,self).__init__(parent)
@@ -566,7 +566,7 @@ class OvenCon(QtGui.QMainWindow):
 if __name__ == '__main__':
     # start GUI application when invoked stand-alone
     app = QtGui.QApplication(sys.argv)
-    port = '/dev/ttyUSB000';
+    port = '/dev/cu.usbmodem73510';
     if(len(sys.argv)>1 and sys.argv[1]):
         # get serial port from command line
         port = sys.argv[1]
