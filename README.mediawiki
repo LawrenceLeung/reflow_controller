@@ -7,7 +7,7 @@ I've made the following modififcations:
 * Ported to atmega32u4 (instead of Dan's at90usb1267)
 * Fixed USB serial sync issues and SPI read issues encountered
 * Ability to use a single thermocouple, SSR
-* Optionally turn off temp moving average
+* Optionally turn off temp moving average (Since it'll likely slow pid response rate)
 
 === MCU Pins ===
 
@@ -55,7 +55,6 @@ I've made the following modififcations:
 | E6
 | LED
 | Out
-
 }}
 
 
