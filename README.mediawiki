@@ -6,8 +6,90 @@
 This controlls a reflow oven using a Atmega32u4 mcu, MAX6675 thermocouple chip, K-type thermocouple and solid state relay.
 
 
-=== Credits ===
-
 This code is forked from Dan Strother's reflow controller code here: http://code.danstrother.com/reflow_controller
 
-I've made modififcations to make it work with my atmega32u4 instead of the default at90usb1267
+I've made the following modififcations
+
+* Ported to atmega32u4 (instead of Dan's at90usb1267)
+* Fixed USB serial sync issues and SPI read issues encountered
+* Ability to use a single thermocouple, SSR
+* Optionally turn off temp moving average
+
+=== MCU Pins ===
+
+{|
+! Pin
+! Purpose
+! Direction
+|-
+| B0
+| MAX6675 CS (Top)
+| Out
+|-
+| B1
+| MAX6675 SCLK
+| Out
+|-
+| B2
+| MOSI (unusued)
+| Out
+|-
+| B3
+| MAX6675 MISO
+| In
+|-
+| B5,B6
+| TIMER1 out
+| Out
+|-
+| C6
+| MAX6675 CS (Bottom, Optional, not tested)
+| Out
+|-
+| D0, D1
+| Zero cross detector (TBD)
+| In
+|-
+| D2,D3
+| Uart1 (unused)
+|
+|-
+| D6, D7
+| Solid state relay Top, Bottom 
+| Out
+| -
+| E6
+| LED
+| Out
+
+}}
+
+
+
+---
+
+ Copyright (c) 2012, Lawrence Leung  (Modifications)
+
+ Copyright (c) 2011, Daniel Strother < http://danstrother.com/ >
+ All rights reserved.
+  
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+    - Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    - Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    - The name of the author may not be used to endorse or promote products
+      derived from this software without specific prior written permission.
+  
+  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
