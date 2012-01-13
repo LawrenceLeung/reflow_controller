@@ -9,9 +9,16 @@ I've made the following modififcations:
 * Ability to use a single thermocouple, SSR
 * Optionally turn off temp moving average (Since it'll likely slow pid response rate)
 
+
+=== Warnings ===
+
+This code controlls high voltage electronics and heat sources. As stated in the copyright below, the authors are not responsible for any damages caused by this program's use or misuse.  Please be careful if you use it. Do not run this unattended.
+
 === MCU Pins ===
 
-{|
+Here's the expected pin configuration:
+
+{| border="1" cellspacing="0" cellpadding="2"
 ! Pin
 ! Purpose
 ! Direction
