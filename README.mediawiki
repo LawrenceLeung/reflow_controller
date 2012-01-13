@@ -18,52 +18,15 @@ This code controlls high voltage electronics and heat sources. As stated in the 
 
 Here's the expected pin configuration:
 
-{| border="1" cellspacing="0" cellpadding="2"
-! Pin
-! Purpose
-! Direction
-|-
-| B0
-| MAX6675 CS (Top)
-| Out
-|-
-| B1
-| MAX6675 SCLK
-| Out
-|-
-| B2
-| MOSI (unusued)
-| Out
-|-
-| B3
-| MAX6675 MISO
-| In
-|-
-| B5,B6
-| TIMER1 out
-| Out
-|-
-| C6
-| MAX6675 CS (Bottom, Optional, not tested)
-| Out
-|-
-| D0, D1
-| Zero cross detector (TBD)
-| In
-|-
-| D2,D3
-| Uart1 (unused)
-|
-|-
-| D6, D7
-| Solid state relay Top, Bottom 
-| Out
-| -
-| E6
-| LED
-| Out
-}}
-
+* <code>B0</code> MAX6675 CS (Top)
+* <code>B1</code> MAX6675 SCLK
+* <code>B3</code> MAX6675 MISO
+* <code>B5,B6</code> TIMER1 reserved
+* <code>C6</code> MAX6675 CS (Bottom, Optional, untested)
+* <code>D0,D1</code> Zero cross detector reserved (Unimplemented)
+* <code>D2,D3</code> Uart1 (Reserved)
+* <code>D6,D7</code> Solid state relay Top, Bottom 
+* <code>E6</code> Status LED
 
 
 === Copyright ===
