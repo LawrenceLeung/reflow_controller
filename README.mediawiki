@@ -30,7 +30,7 @@ Here's the expected pin configuration:
 
 
 === Copyright ===
-<pre>
+<code>
  Copyright (c) 2012, Lawrence Leung  (Modifications)
 
  Copyright (c) 2011, Daniel Strother < http://danstrother.com/ >
@@ -56,5 +56,5 @@ Here's the expected pin configuration:
   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</pre>
+</code>
 
