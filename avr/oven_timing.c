@@ -24,59 +24,72 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <avr/io.h>
+
+#include "ovencon.h"
 #include <avr/interrupt.h>
 #include <stdint.h>
+
 #include "oven_timing.h"
 
-// implemented in main program (ovencon.c)
-extern void oven_update_120hz(void);
-extern void oven_update_4hz(void);
 
-uint8_t div;
+volatile static uint8_t div;
 
 void timing_setup(void)
 {
     div     = 0;
 
+    cli(); // turn off interrupts temporarily
+
+    DDRB |= _BV(5) | _BV(6); // enable PWM (maybe this will make my timer work?)
+
     // CTC with ICRn TOP, clk/8
 //    ICR1    = 16807; // 16MHz/(8*16807) = 119Hz (slightly under mains frequency; will sync with external interrupt)
+
+    TCNT1 = 0;
     ICR1    = 16667; // 119.998 Hz (no external sync)
     TCCR1A  = 0;
-    TCCR1B  = _BV(WGM13) | _BV(WGM12) | _BV(CS11);
+    TCCR1B  = _BV(WGM13) | _BV(WGM12) | _BV(CS11); // CTC, clk div 8
     TCCR1C  = 0;
     OCR1A   = 14000; // update outputs a little while before next zero-cross
     TIMSK1  = _BV(OCIE1A); // enable OCRA1 interrupt
 
+
     // enable external interrupt (INT0/PD0 and INT1/PD1; falling edge)
     // TODO: not currently used; requires extra hardware to sample mains
     // (e.g. a low-voltage transformer)
-    DDRD    &= ~(_BV(0) | _BV(1));
-    PORTD   |= _BV(0) | _BV(1); // pull-up
+//    DDRD    &= ~(_BV(0) | _BV(1));
+//    PORTD   |= _BV(0) | _BV(1); // pull-up
 //    EICRA   = _BV(ISC01) | _BV(ISC11);
 //    EIMSK   = _BV(INT0) | _BV(INT1);
+
+
+    // E6 blinky
+    DDRE |= _BV(6);
+    PORTE |= (_BV(6));
+
+    sei(); //reenable interrupts
 }
 
 // timer interrupt
 ISR(TIMER1_COMPA_vect)
 {
     oven_update_120hz();
+    div++;
 
     // re-enable interrupts
     sei();
 
     // execute control update every 30 steps (120/30 = 4 Hz)
-    if(++div == 30)
+    if (30==div)
     {
         div = 0;
-        DDRD |= _BV(6);
-        PORTD ^= _BV(6);
         oven_update_4hz();
+    	PORTE ^=_BV(6); //blink E6
     }
 }
 
 // AC zero-cross interrupts - just clear timer
-ISR(INT0_vect) { TCNT1 = 0; }
-ISR(INT1_vect) { TCNT1 = 0; }
+//ISR(INT0_vect) { TCNT1 = 0; }
+//ISR(INT1_vect) { TCNT1 = 0; }
 
 

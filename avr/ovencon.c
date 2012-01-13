@@ -24,9 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
+#include "ovencon.h"
 #include <util/delay.h>
 #include <stdint.h>
 
@@ -85,12 +83,45 @@ uint8_t state = ST_FAULT;
 int16_t target;
 uint16_t time;
 
+
+char tx_msg[255];
+volatile uint8_t tx_len = 0;
+
 void fault(void)
 {
 // TODO: need to mask faults briefly at power-up, otherwise this will
 // prematurely trip due to bogus thermocouple data
 //    state = ST_FAULT;
 //    ssr_fault();
+
+    tx_len=sprintf_P(tx_msg,PSTR("FAULT\n"));
+    if (!usb_configured()) return;
+    usb_serial_write((void*)tx_msg,tx_len);
+    tx_len = 0; // clear the length, so the control loop knows it can generate a new message
+}
+
+void thermocouple_fault(int16_t result)
+{
+    tx_len = sprintf_P(tx_msg,PSTR("TFAULT: %d\n"),
+	            result);
+    if (!usb_configured()) return;
+     usb_serial_write((void*)tx_msg,tx_len);
+     tx_len = 0; // clear the length, so the control loop knows it can generate a new message
+}
+
+void debugmsg(PGM_P  pmsg){
+#ifdef DEBUG
+	if (!usb_configured()) return;
+
+    if (tx_len>0)
+        usb_serial_write((void*)tx_msg,tx_len);
+    tx_len = sprintf_P(tx_msg,pmsg);
+    usb_serial_write((void*)tx_msg,tx_len);
+#endif
+    //tx_msg[0]=0;
+   // tx_len = 0; // clear the length, so the control loop knows it can generate a new message
+   //  _delay_ms(100);
+
 }
 
 void oven_output(uint8_t top, uint8_t bot)
@@ -109,8 +140,13 @@ void oven_input(int16_t *top, int16_t *bot)
 {
     if( !mode_fake_in )
     {
-        *top = max6675_read(0);
+    	*top = max6675_read(0);
+
+#ifndef BOTTOM_THERM
+    	*bot = *top;
+#else
         *bot = max6675_read(1);
+#endif
     }
     else
     {
@@ -137,12 +173,15 @@ void oven_setup(void)
 
     target          = 0;
     time            = 0;
+    tx_len          = 0;
 
     pid_reset();
     profile_reset();
     ssr_setup();
     max6675_setup();
-    timing_setup(); // timing setup last, since it enables timer interrupts (which invoke the update functions below)
+
+    max6675_start();
+    timing_setup();
 }
 
 void oven_update_120hz(void)
@@ -150,8 +189,6 @@ void oven_update_120hz(void)
     ssr_update();
 }
 
-char tx_msg[255];
-volatile uint8_t tx_len = 0;
 
 void oven_update_4hz(void)
 {
@@ -269,7 +306,6 @@ void oven_update_4hz(void)
 
     time++;
 
-    PORTC = time;
 }
 
 char rx_msg[255];
@@ -310,31 +346,33 @@ int main(void)
     // no prescaler
     CLKPR = 0x80;
     CLKPR = 0;
-   
-    // port C is just an 8-bit debug output
-    DDRC = 0xFF;
-    PORTC = 0xFF;
+
+    // hold CS high until init
+    DDRB|=_BV(0);
+    PORTB|=_BV(0);
+
+
+    // initialize
+    oven_setup();
+
+
+    // sleep.  Makes the USB less cranky
+    _delay_ms(1000);
 
     // wait for usb to initialize
     usb_init();
     while (!usb_configured());
-    
-    PORTC = 0x01;
 
-    // initialize
-    oven_setup();
-    
-    PORTC = 0x03;
 
     // wait an arbitrary bit for the host to complete its side of the init
     _delay_ms(1000);
+    //timing_setup(); // timing setup last, since it enables timer interrupts (which invoke the update functions)
 
     // clear any stale packets
     usb_serial_flush_input();
-    
-    PORTC = 0x07;
-
     rx_cnt = 0;
+
+
 
     // run forever
     while(1)

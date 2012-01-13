@@ -72,18 +72,18 @@ static void _ssr_output(uint8_t top, uint8_t bot)
     if(ssr_shutdown)
         top = bot = 0;
 
-    // top is PB5, bot is PB6
+    // top is PD6, bottom is PD7
     if(top)
-        PORTB |= _BV(5);
+        PORTD |= _BV(6);
     else
-        PORTB &= ~(_BV(5));
+        PORTD &= ~(_BV(6));
+
 
     if(bot)
-        PORTB |= _BV(6);
+        PORTD |= _BV(7);
     else
-        PORTB &= ~(_BV(6));
+        PORTD &= ~(_BV(7));
 
-    DDRB |= _BV(5) | _BV(6);
 }
 
 uint8_t ssr_top_idx;
@@ -100,6 +100,8 @@ void ssr_setup(void)
     ssr_bot_idx = 1; // shift by half of an AC cycle
     ssr_top_val = 0;
     ssr_bot_val = 0;
+
+    DDRD|=_BV(6)|_BV(7);
 }
 
 void ssr_set(uint8_t top, uint8_t bot)
@@ -123,10 +125,10 @@ void ssr_update(void)
 
     _ssr_output(top,bot);
 
-    if(ssr_top_idx == 29)   ssr_top_idx = 0;
+    if(ssr_top_idx >= 29)   ssr_top_idx = 0;
     else                    ssr_top_idx++;
 
-    if(ssr_bot_idx == 29)   ssr_bot_idx = 0;
+    if(ssr_bot_idx >= 29)   ssr_bot_idx = 0;
     else                    ssr_bot_idx++;
 
 }
