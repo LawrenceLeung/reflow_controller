@@ -30,9 +30,10 @@ Here's the expected pin configuration:
 
 
 === Copyright ===
+
 <pre style="white-space: pre-wrap">Copyright (c) 2012, Lawrence Leung  (Modifications)
 
- Copyright (c) 2011, Daniel Strother < http://danstrother.com/ >
+ Copyright (c) 2011, Daniel Strother http://danstrother.com/
  All rights reserved.
   
   Redistribution and use in source and binary forms, with or without
