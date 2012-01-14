@@ -18,15 +18,15 @@ This code controlls high voltage electronics and heat sources. As stated in the 
 
 Here's the expected pin configuration:
 
-* <code>B0</code> MAX6675 CS (Top)
+* <code>B0</code> MAX6675 CS (Top. Pullup recommended for ISP programming)
 * <code>B1</code> MAX6675 SCLK
 * <code>B3</code> MAX6675 MISO
 * <code>B5,B6</code> TIMER1 reserved
 * <code>C6</code> MAX6675 CS (Bottom, Optional, untested)
 * <code>D0,D1</code> Zero cross detector reserved (Unimplemented)
 * <code>D2,D3</code> Uart1 (Reserved)
-* <code>D6,D7</code> Solid state relay Top, Bottom 
-* <code>E6</code> Status LED
+* <code>D6,D7</code> Solid state relay Top, Bottom (Active-low.  Pullups recommended)
+* <code>E6</code> Status LED (active high, to match arduino conventions unfortunately)
 
 
 === Copyright ===
