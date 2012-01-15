@@ -62,5 +62,12 @@ extern void oven_update_4hz(void);
 //#define DEBUG
 
 
+// default pid settings.  The term is actually 2^n
+
+#define DEFAULT_K_P   13
+#define DEFAULT_K_I   3
+#define DEFAULT_K_D   13
+
+
 #endif
 

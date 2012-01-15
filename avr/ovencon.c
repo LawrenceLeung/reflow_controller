@@ -58,6 +58,13 @@ volatile uint8_t manual_cmd_b;
 volatile int16_t manual_target;
 
 
+
+extern volatile uint8_t k_p;
+extern volatile uint8_t k_i;
+extern volatile uint8_t k_d;
+
+
+
 #define CMD_RESET   1
 #define CMD_GO      2
 #define CMD_PAUSE   3
@@ -168,7 +175,11 @@ void oven_setup(void)
     manual_target   = 0;
     fake_temp_t     = 0;
     fake_temp_b     = 0;
-    
+
+    k_p   = DEFAULT_K_P;
+    k_i   = DEFAULT_K_I;
+    k_d   = DEFAULT_K_D;
+
     comm_cmd        = 0;
 
     target          = 0;
@@ -319,12 +330,16 @@ void process_message(const char *msg)
     // and all of the timing-critical routines are handled by interrupts, so
     // there isn't a lot of downside to this expensive-but-easy implementation
 
+
+    cli(); // temporarily disable interrupts to prevent any potential write errors
+
     if(sscanf_P(msg,PSTR("temp: %d, %d"),&fake_temp_t,&fake_temp_b) || \
        sscanf_P(msg,PSTR("cmd: %hhu, %hhu"),&manual_cmd_t,&manual_cmd_b) || \
        sscanf_P(msg,PSTR("target: %d"),&manual_target) || \
        sscanf_P(msg,PSTR("fake_out: %hhu"),&mode_fake_out) || \
        sscanf_P(msg,PSTR("fake_in: %hhu"),&mode_fake_in) || \
-       sscanf_P(msg,PSTR("manual: %hhu"),&mode_manual)) {
+       sscanf_P(msg,PSTR("manual: %hhu"),&mode_manual) ||
+       sscanf_P(msg,PSTR("pid: %d, %d, %d"),&k_p, &k_i, &k_d)) {
         ;
     } else if(strcmp_P(msg,PSTR("reset")) == 0) {
         comm_cmd = CMD_RESET;
@@ -335,6 +350,8 @@ void process_message(const char *msg)
     } else if(strcmp_P(msg,PSTR("resume")) == 0) {
         comm_cmd = CMD_RESUME;
     }
+
+    sei();
 }
 
 // program entry point
