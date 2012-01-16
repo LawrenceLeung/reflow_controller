@@ -27,6 +27,12 @@
 #ifndef MAX6675_H_INCLUDED
 #define MAX6675_H_INCLUDED
 
+
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdint.h>
 
 void max6675_setup(void);
@@ -34,6 +40,12 @@ void max6675_setup(void);
 void max6675_start(void);
 
 int16_t max6675_read(uint8_t device);
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

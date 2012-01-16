@@ -27,10 +27,22 @@
 #ifndef OVEN_PROFILE_H_INCLUDED
 #define OVEN_PROFILE_H_INCLUDED
 
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdint.h>
 
 void profile_reset(void);
 uint8_t profile_update(int16_t *target);
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
 

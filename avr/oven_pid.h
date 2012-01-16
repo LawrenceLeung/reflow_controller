@@ -27,10 +27,20 @@
 #ifndef OVEN_PID_H_INCLUDED
 #define OVEN_PID_H_INCLUDED
 
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdint.h>
 
 void pid_reset(void);
 uint8_t pid_update(int16_t temp, int16_t target);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
 

@@ -28,11 +28,18 @@
 #define OVENCON_H
 
 
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <avr/io.h>
 #include <util/delay.h>
 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+
+
 
 extern void fault(void);
 extern void thermocouple_fault(int16_t result);
@@ -40,6 +47,11 @@ extern void debugmsg(PGM_P  pmsg);
 extern void oven_update_120hz(void);
 extern void oven_update_4hz(void);
 
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 // Thermocouple settings
@@ -62,7 +74,7 @@ extern void oven_update_4hz(void);
 //#define DEBUG
 
 
-// default pid settings.  The term is actually 2^n
+// default pid settings.  The term is actually 2^n for simplicity of calculation. These nubers should probably be <15
 
 #define DEFAULT_K_P   13
 #define DEFAULT_K_I   3

@@ -27,12 +27,25 @@
 #ifndef OVEN_SSR_H_INCLUDED
 #define OVEN_SSR_H_INCLUDED
 
+
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdint.h>
 
 void ssr_setup(void);
 void ssr_update(void);
 void ssr_set(uint8_t top, uint8_t bot);
 void ssr_fault(void);
+
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

@@ -8,7 +8,7 @@ I've made the following modififcations:
 * Fixed USB serial sync issues and SPI read issues encountered
 * Ability to use a single thermocouple, SSR
 * Optionally turn off temp moving average (Since it'll likely slow pid response rate)
-
+* Nokia 3310 LCD support
 
 === Warnings ===
 
@@ -25,6 +25,7 @@ Here's the expected pin configuration:
 * <code>C6</code> MAX6675 CS (Bottom, Optional, untested)
 * <code>D0,D1</code> Zero cross detector reserved (Unimplemented)
 * <code>D2,D3</code> Uart1 (Reserved)
+* <code>F0,1,4,5,6</code> LCD RST,CS,D/C,DIN/MOSI,SCLK  (Note: this is through a 5v to 3.3v 4050D level shifter!!)
 * <code>D6,D7</code> Solid state relay Top, Bottom (Active-low.  Pullups recommended)
 * <code>E6</code> Status LED (active high, to match arduino conventions unfortunately)
 

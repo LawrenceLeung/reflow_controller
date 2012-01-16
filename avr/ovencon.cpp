@@ -38,6 +38,9 @@
 #include "oven_pid.h"
 #include "oven_profile.h"
 #include "max6675.h"
+#include "arduino/PCD8544.h"
+
+#include <PCD8544.h>
 
 
 // commands/config to controller from serial
@@ -75,6 +78,17 @@ extern volatile uint8_t k_d;
 volatile uint8_t comm_cmd;
 
 
+
+// Note pins are in arduino format
+// Serial clock out (SCLK) - PF6
+// Serial data out (DIN) - PF5
+// Data/Command select (D/C) - PF4
+// LCD chip select (CS) - PF1
+// LCD reset (RST) - PF0
+// static initialization is gross but avr-g++ doesn't seem to do new/delete
+PCD8544 nokia(17,18,19,20,21);
+
+
 // controller state
 
 #define ST_FAULT    0
@@ -90,6 +104,10 @@ uint8_t state = ST_FAULT;
 int16_t target;
 uint16_t time;
 
+int16_t temp_t,temp_b; // last read temps
+
+uint8_t should_update_lcd;
+
 
 char tx_msg[255];
 volatile uint8_t tx_len = 0;
@@ -103,7 +121,7 @@ void fault(void)
 
     tx_len=sprintf_P(tx_msg,PSTR("FAULT\n"));
     if (!usb_configured()) return;
-    usb_serial_write((void*)tx_msg,tx_len);
+    usb_serial_write((const uint8_t*)tx_msg,tx_len);
     tx_len = 0; // clear the length, so the control loop knows it can generate a new message
 }
 
@@ -112,7 +130,7 @@ void thermocouple_fault(int16_t result)
     tx_len = sprintf_P(tx_msg,PSTR("TFAULT: %d\n"),
 	            result);
     if (!usb_configured()) return;
-     usb_serial_write((void*)tx_msg,tx_len);
+     usb_serial_write((const uint8_t*)tx_msg,tx_len);
      tx_len = 0; // clear the length, so the control loop knows it can generate a new message
 }
 
@@ -175,6 +193,8 @@ void oven_setup(void)
     manual_target   = 0;
     fake_temp_t     = 0;
     fake_temp_b     = 0;
+    temp_t =0;
+    temp_b =0;
 
     k_p   = DEFAULT_K_P;
     k_i   = DEFAULT_K_I;
@@ -185,6 +205,10 @@ void oven_setup(void)
     target          = 0;
     time            = 0;
     tx_len          = 0;
+    should_update_lcd=0;
+
+    nokia.init();
+    
 
     pid_reset();
     profile_reset();
@@ -203,7 +227,6 @@ void oven_update_120hz(void)
 
 void oven_update_4hz(void)
 {
-    int16_t temp_t,temp_b;
     uint8_t cmd,cmd_t,cmd_b;
    
     oven_input(&temp_t,&temp_b);
@@ -314,7 +337,7 @@ void oven_update_4hz(void)
             cmd_t,
             cmd_b);
     }
-
+    should_update_lcd=1;
     time++;
 
 }
@@ -380,13 +403,28 @@ int main(void)
     usb_init();
     while (!usb_configured());
 
+    nokia.clear();
+    nokia.setCursor(0, 0);
+    nokia.print("USB Host Detected");
+    nokia.setCursor(0, 25);
+    nokia.print("Waiting for host software");
+    nokia.display();
 
-    // wait an arbitrary bit for the host to complete its side of the init
+     // wait an arbitrary bit for the host to complete its side of the init
     _delay_ms(1000);
-    //timing_setup(); // timing setup last, since it enables timer interrupts (which invoke the update functions)
 
     // clear any stale packets
-    usb_serial_flush_input();
+    usb_serial_flush_input();    
+
+    // wait for DTR
+    while (!(usb_serial_get_control() & USB_SERIAL_DTR));
+
+    nokia.clear();
+    nokia.setCursor(0, 0);
+    nokia.print("USB Host Initialized");
+    nokia.display();
+
+   
     rx_cnt = 0;
 
 
@@ -398,8 +436,24 @@ int main(void)
         // send it out over USB to the host
         if(tx_len)
         {
-            usb_serial_write((void*)tx_msg,tx_len);
+            usb_serial_write((const uint8_t*)tx_msg,tx_len);
             tx_len = 0; // clear the length, so the control loop knows it can generate a new message
+        }else {
+            if (should_update_lcd){
+                nokia.clear();
+                nokia.setCursor(0, 0);
+                nokia.print("Temp: ");
+                nokia.print(temp_t>>2); // temp is in .25C
+                nokia.print(".");
+                uint8_t decimal=(temp_t & 0x03)*25;
+                nokia.print(decimal);
+                if (!decimal){
+                  nokia.print(decimal); // 2 zeros
+                }
+                nokia.print("C");
+                nokia.display();
+                should_update_lcd=0;
+            }
         }
 
         // receive individual characters from the host

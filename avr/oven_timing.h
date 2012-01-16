@@ -27,7 +27,18 @@
 #ifndef OVEN_TIMING_H_INCLUDED
 #define OVEN_TIMING_H_INCLUDED
 
+
+
+#ifdef __cplusplus
+extern "C"{
+#endif
 void timing_setup(void);
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

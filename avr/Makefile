@@ -1,6 +1,6 @@
 # Hey Emacs, this is a -*- makefile -*-
 #----------------------------------------------------------------------------
-# WinAVR Makefile Template written by Eric B. Weddington, Jörg Wunsch, et al.
+# WinAVR Makefile Template written by Eric B. Weddington, Jï¿½rg Wunsch, et al.
 #
 # Released to the Public Domain
 #
@@ -45,7 +45,8 @@ TARGET = ovencon
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC =	$(TARGET).c oven_ssr.c oven_timing.c oven_pid.c oven_profile.c max6675.c usb_serial.c
+SRC = oven_ssr.c oven_timing.c oven_pid.c oven_profile.c max6675.c usb_serial.c arduino/wiring.c arduino/pins_teensy.c
+#$(TARGET).c oven_ssr.c oven_timing.c oven_pid.c oven_profile.c max6676.c usb_serial.c
 
 
 # MCU name, you MUST set this to match the board you are using
@@ -76,7 +77,7 @@ OBJDIR = .
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = 
+CPPSRC = $(TARGET).cpp arduino/WInterrupts.cpp  arduino/wiring.cpp arduino/PCD8544.cpp arduino/Print.cpp arduino/WString.cpp
 
 
 # List Assembler source files here.
@@ -106,7 +107,7 @@ DEBUG = dwarf-2
 #     Each directory must be seperated by a space.
 #     Use forward slashes for directory separators.
 #     For a directory that has spaces, enclose it in quotes.
-EXTRAINCDIRS = 
+EXTRAINCDIRS = arduino
 
 
 # Compiler flag to set the C Standard level.
@@ -591,6 +592,12 @@ clean_list :
 	$(REMOVE) $(TARGET).map
 	$(REMOVE) $(TARGET).sym
 	$(REMOVE) $(TARGET).lss
+	$(REMOVE) $(TARGET).o
+	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.o)
+	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.lst)
+	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.s)
+	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.d)
+	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.i)
 	$(REMOVE) $(SRC:%.c=$(OBJDIR)/%.o)
 	$(REMOVE) $(SRC:%.c=$(OBJDIR)/%.lst)
 	$(REMOVE) $(SRC:.c=.s)
