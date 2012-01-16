@@ -1,6 +1,11 @@
 #ifndef usb_serial_h__
 #define usb_serial_h__
 
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdint.h>
 
 // setup
@@ -121,4 +126,10 @@ int8_t usb_serial_set_control(uint8_t signals); // set DSR, DCD, RI, etc
 #define CDC_GET_LINE_CODING		0x21
 #define CDC_SET_CONTROL_LINE_STATE	0x22
 #endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
