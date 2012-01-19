@@ -383,9 +383,16 @@ int main(void)
     int16_t ret;
     char c;
 
-    // no prescaler
     CLKPR = 0x80;
-    CLKPR = 0;
+#if (F_CPU == 16000000)
+    CLKPR = 0; // no prescaler
+#elif (F_CPU == 8000000)
+    // prescaler at /2 or 8mhz
+    CLKPR = _BV(CLKPS0);
+#else
+#error "F_CPU Not defined to be 16mhz or 8mhz"
+#endif
+
 
     // hold CS high until init
     DDRB|=_BV(0);
@@ -439,7 +446,7 @@ int main(void)
             usb_serial_write((const uint8_t*)tx_msg,tx_len);
             tx_len = 0; // clear the length, so the control loop knows it can generate a new message
         }else {
-            if (should_update_lcd){
+            if (should_update_lcd){ // a full LCD update takes approx 2ms @16mhz as timed
                 nokia.clear();
                 nokia.setCursor(0, 0);
                 nokia.print("Temp: ");

@@ -46,11 +46,22 @@ void timing_setup(void)
 //    ICR1    = 16807; // 16MHz/(8*16807) = 119Hz (slightly under mains frequency; will sync with external interrupt)
 
     TCNT1 = 0;
-    ICR1    = 16667; // 119.998 Hz (no external sync)
     TCCR1A  = 0;
-    TCCR1B  = _BV(WGM13) | _BV(WGM12) | _BV(CS11); // CTC, clk div 8
+    TCCR1B  = _BV(WGM13) | _BV(WGM12) |  _BV(CS11); // CTC, clk div 8
     TCCR1C  = 0;
-    OCR1A   = 14000; // update outputs a little while before next zero-cross
+
+    // 119.998 Hz (no external sync)
+#if (F_CPU==16000000)
+    ICR1    = 16667; 
+    OCR1A   = 14000; 
+#elif (F_CPU==8000000)
+    ICR1    = 8404; 
+    OCR1A   = 7000;
+#else
+#error "FCPU not 16mhz or 8mhz"
+#endif
+
+
     TIMSK1  = _BV(OCIE1A); // enable OCRA1 interrupt
 
 
