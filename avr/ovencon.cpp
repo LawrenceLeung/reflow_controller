@@ -102,6 +102,11 @@ uint8_t should_update_lcd;
 char tx_msg[255];
 volatile uint8_t tx_len = 0;
 
+uint8_t is_usb_ready(){
+    return usb_configured() & (usb_serial_get_control() & USB_SERIAL_DTR);
+}
+
+
 void fault(void)
 {
 // TODO: need to mask faults briefly at power-up, otherwise this will
@@ -110,7 +115,7 @@ void fault(void)
 //    ssr_fault();
 
     tx_len=sprintf_P(tx_msg,PSTR("FAULT\n"));
-    if (!usb_configured()) return;
+    if (!is_usb_ready()) return;
     usb_serial_write((const uint8_t*)tx_msg,tx_len);
     tx_len = 0; // clear the length, so the control loop knows it can generate a new message
 }
@@ -119,15 +124,15 @@ void thermocouple_fault(int16_t result)
 {
     tx_len = sprintf_P(tx_msg,PSTR("TFAULT: %d\n"),
 	            result);
-    if (!usb_configured()) return;
+    if (!is_usb_ready()) return;
      usb_serial_write((const uint8_t*)tx_msg,tx_len);
      tx_len = 0; // clear the length, so the control loop knows it can generate a new message
 }
 
 void debugmsg(PGM_P  pmsg){
 #ifdef DEBUG
-	if (!usb_configured()) return;
-
+    if (!is_usb_ready()) return;
+    
     if (tx_len>0)
         usb_serial_write((void*)tx_msg,tx_len);
     tx_len = sprintf_P(tx_msg,pmsg);
@@ -414,7 +419,7 @@ int main(void)
     {
         // if the control loop has generated a status update message,
         // send it out over USB to the host
-        if(tx_len)
+        if(tx_len  && is_usb_ready())
         {
             usb_serial_write((const uint8_t*)tx_msg,tx_len);
             tx_len = 0; // clear the length, so the control loop knows it can generate a new message
@@ -425,22 +430,24 @@ int main(void)
             }
         }
 
-        // receive individual characters from the host
-        while( (ret = usb_serial_getchar()) != -1)
-        {
-            // all commands are terminated with a new-line
-            c = ret;
-            if(c == '\n') {
-                // only process commands that haven't overflowed the buffer
-                if(rx_cnt > 0 && rx_cnt < 255) {
-                    rx_msg[rx_cnt] = '\0';
-                    process_message(rx_msg);
+        if (is_usb_ready()){
+            // receive individual characters from the host
+            while( (ret = usb_serial_getchar()) != -1)
+            {
+                // all commands are terminated with a new-line
+                c = ret;
+                if(c == '\n') {
+                    // only process commands that haven't overflowed the buffer
+                    if(rx_cnt > 0 && rx_cnt < 255) {
+                        rx_msg[rx_cnt] = '\0';
+                        process_message(rx_msg);
+                    }
+                    rx_cnt = 0;
+                } else {
+                    // buffer received characters
+                    rx_msg[rx_cnt] = c;
+                    if(rx_cnt != 255) rx_cnt++;
                 }
-                rx_cnt = 0;
-            } else {
-                // buffer received characters
-                rx_msg[rx_cnt] = c;
-                if(rx_cnt != 255) rx_cnt++;
             }
         }
     }

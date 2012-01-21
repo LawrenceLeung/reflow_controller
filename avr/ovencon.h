@@ -28,7 +28,6 @@
 #define OVENCON_H
 
 
-
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -40,18 +39,20 @@ extern "C"{
 #include <avr/pgmspace.h>
 
 
-
 extern void fault(void);
 extern void thermocouple_fault(int16_t result);
 extern void debugmsg(PGM_P  pmsg);
 extern void oven_update_120hz(void);
 extern void oven_update_4hz(void);
 
+extern uint8_t is_usb_ready(void);
+
 
 
 #ifdef __cplusplus
 }
 #endif
+
 
 
 // Thermocouple settings
