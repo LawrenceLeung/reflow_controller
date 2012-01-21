@@ -37,10 +37,10 @@
 #include "oven_timing.h"
 #include "oven_pid.h"
 #include "oven_profile.h"
+#include "oven_lcd.h"
 #include "max6675.h"
 #include "arduino/PCD8544.h"
 
-#include <PCD8544.h>
 
 
 // commands/config to controller from serial
@@ -77,16 +77,6 @@ extern volatile uint8_t k_d;
 // invocation, so multiple commands received within a ~0.25s window may be lost
 volatile uint8_t comm_cmd;
 
-
-
-// Note pins are in arduino format
-// Serial clock out (SCLK) - PF6
-// Serial data out (DIN) - PF5
-// Data/Command select (D/C) - PF4
-// LCD chip select (CS) - PF1
-// LCD reset (RST) - PF0
-// static initialization is gross but avr-g++ doesn't seem to do new/delete
-PCD8544 nokia(17,18,19,20,21);
 
 
 // controller state
@@ -207,9 +197,7 @@ void oven_setup(void)
     tx_len          = 0;
     should_update_lcd=0;
 
-    nokia.init();
-    
-
+    lcd_init();
     pid_reset();
     profile_reset();
     ssr_setup();
@@ -408,32 +396,17 @@ int main(void)
 
     // wait for usb to initialize
     usb_init();
-    while (!usb_configured());
 
-    nokia.clear();
-    nokia.setCursor(0, 0);
-    nokia.print("USB Host Detected");
-    nokia.setCursor(0, 25);
-    nokia.print("Waiting for host software");
-    nokia.display();
+    lcd_usb_found_wait();
 
      // wait an arbitrary bit for the host to complete its side of the init
     _delay_ms(1000);
 
     // clear any stale packets
     usb_serial_flush_input();    
-
-    // wait for DTR
-    while (!(usb_serial_get_control() & USB_SERIAL_DTR));
-
-    nokia.clear();
-    nokia.setCursor(0, 0);
-    nokia.print("USB Host Initialized");
-    nokia.display();
-
-   
     rx_cnt = 0;
 
+    lcd_host_dtr_wait();
 
 
     // run forever
@@ -447,18 +420,7 @@ int main(void)
             tx_len = 0; // clear the length, so the control loop knows it can generate a new message
         }else {
             if (should_update_lcd){ // a full LCD update takes approx 2ms @16mhz as timed
-                nokia.clear();
-                nokia.setCursor(0, 0);
-                nokia.print("Temp: ");
-                nokia.print(temp_t>>2); // temp is in .25C
-                nokia.print(".");
-                uint8_t decimal=(temp_t & 0x03)*25;
-                nokia.print(decimal);
-                if (!decimal){
-                  nokia.print(decimal); // 2 zeros
-                }
-                nokia.print("C");
-                nokia.display();
+                lcd_update();
                 should_update_lcd=0;
             }
         }

@@ -1,0 +1,292 @@
+   1               		.file	"oven_lcd.cpp"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  17               	_GLOBAL__I_nokia:
+  18               	.LFB70:
+  19               	.LM1:
+  20 0000 EF92      		push r14
+  21 0002 0F93      		push r16
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	.LBB4:
+  25               	.LBB5:
+  26               	.LM2:
+  27 0004 80E0      		ldi r24,lo8(nokia)
+  28 0006 90E0      		ldi r25,hi8(nokia)
+  29 0008 61E1      		ldi r22,lo8(17)
+  30 000a 42E1      		ldi r20,lo8(18)
+  31 000c 23E1      		ldi r18,lo8(19)
+  32 000e 04E1      		ldi r16,lo8(20)
+  33 0010 35E1      		ldi r19,lo8(21)
+  34 0012 E32E      		mov r14,r19
+  35 0014 0E94 0000 		call _ZN7PCD8544C1Eaaaaa
+  36               	/* epilogue start */
+  37               	.LBE5:
+  38               	.LBE4:
+  39               	.LM3:
+  40 0018 0F91      		pop r16
+  41 001a EF90      		pop r14
+  42 001c 0895      		ret
+  43               	.LFE70:
+  45               		.global __do_global_ctors
+  46               		.section .ctors,"a",@progbits
+  47 0000 0000      		.word	gs(_GLOBAL__I_nokia)
+  48               		.data
+  49               	.LC0:
+  50 0000 5465 6D70 		.string	"Temp: "
+  50      3A20 00
+  51               	.LC1:
+  52 0007 2E00      		.string	"."
+  53               	.LC2:
+  54 0009 3030 00   		.string	"00"
+  55               	.LC3:
+  56 000c 4300      		.string	"C"
+  57               		.text
+  58               	.global	_Z10lcd_updatev
+  60               	_Z10lcd_updatev:
+  61               	.LFB68:
+  62               	.LM4:
+  63 001e 0F93      		push r16
+  64 0020 1F93      		push r17
+  65               	/* prologue: function */
+  66               	/* frame size = 0 */
+  67               	.LBB6:
+  68               	.LM5:
+  69 0022 80E0      		ldi r24,lo8(nokia)
+  70 0024 90E0      		ldi r25,hi8(nokia)
+  71 0026 0E94 0000 		call _ZN7PCD85445clearEv
+  72               	.LM6:
+  73 002a 80E0      		ldi r24,lo8(nokia)
+  74 002c 90E0      		ldi r25,hi8(nokia)
+  75 002e 60E0      		ldi r22,lo8(0)
+  76 0030 40E0      		ldi r20,lo8(0)
+  77 0032 0E94 0000 		call _ZN7PCD85449setCursorEhh
+  78               	.LM7:
+  79 0036 80E0      		ldi r24,lo8(nokia)
+  80 0038 90E0      		ldi r25,hi8(nokia)
+  81 003a 60E0      		ldi r22,lo8(.LC0)
+  82 003c 70E0      		ldi r23,hi8(.LC0)
+  83 003e 0E94 0000 		call _ZN5Print5printEPKc
+  84               	.LM8:
+  85 0042 6091 0000 		lds r22,temp_t
+  86 0046 7091 0000 		lds r23,(temp_t)+1
+  87 004a 7595      		asr r23
+  88 004c 6795      		ror r22
+  89 004e 7595      		asr r23
+  90 0050 6795      		ror r22
+  91 0052 80E0      		ldi r24,lo8(nokia)
+  92 0054 90E0      		ldi r25,hi8(nokia)
+  93 0056 0E94 0000 		call _ZN5Print5printEi
+  94               	.LM9:
+  95 005a 80E0      		ldi r24,lo8(nokia)
+  96 005c 90E0      		ldi r25,hi8(nokia)
+  97 005e 60E0      		ldi r22,lo8(.LC1)
+  98 0060 70E0      		ldi r23,hi8(.LC1)
+  99 0062 0E94 0000 		call _ZN5Print5printEPKc
+ 100               	.LM10:
+ 101 0066 8091 0000 		lds r24,temp_t
+ 102 006a 9091 0000 		lds r25,(temp_t)+1
+ 103 006e 8370      		andi r24,lo8(3)
+ 104 0070 9070      		andi r25,hi8(3)
+ 105 0072 29E1      		ldi r18,lo8(25)
+ 106 0074 30E0      		ldi r19,hi8(25)
+ 107 0076 829F      		mul r24,r18
+ 108 0078 8001      		movw r16,r0
+ 109 007a 839F      		mul r24,r19
+ 110 007c 100D      		add r17,r0
+ 111 007e 929F      		mul r25,r18
+ 112 0080 100D      		add r17,r0
+ 113 0082 1124      		clr r1
+ 114               	.LM11:
+ 115 0084 80E0      		ldi r24,lo8(nokia)
+ 116 0086 90E0      		ldi r25,hi8(nokia)
+ 117 0088 602F      		mov r22,r16
+ 118 008a 0E94 0000 		call _ZN5Print5printEh
+ 119               	.LM12:
+ 120 008e 0023      		tst r16
+ 121 0090 01F4      		brne .L4
+ 122               	.LM13:
+ 123 0092 80E0      		ldi r24,lo8(nokia)
+ 124 0094 90E0      		ldi r25,hi8(nokia)
+ 125 0096 60E0      		ldi r22,lo8(.LC2)
+ 126 0098 70E0      		ldi r23,hi8(.LC2)
+ 127 009a 0E94 0000 		call _ZN5Print5printEPKc
+ 128               	.L4:
+ 129               	.LM14:
+ 130 009e 80E0      		ldi r24,lo8(nokia)
+ 131 00a0 90E0      		ldi r25,hi8(nokia)
+ 132 00a2 60E0      		ldi r22,lo8(.LC3)
+ 133 00a4 70E0      		ldi r23,hi8(.LC3)
+ 134 00a6 0E94 0000 		call _ZN5Print5printEPKc
+ 135               	.LM15:
+ 136 00aa 80E0      		ldi r24,lo8(nokia)
+ 137 00ac 90E0      		ldi r25,hi8(nokia)
+ 138 00ae 0E94 0000 		call _ZN7PCD85447displayEv
+ 139               	/* epilogue start */
+ 140               	.LBE6:
+ 141               	.LM16:
+ 142 00b2 1F91      		pop r17
+ 143 00b4 0F91      		pop r16
+ 144 00b6 0895      		ret
+ 145               	.LFE68:
+ 147               		.data
+ 148               	.LC4:
+ 149 000e 5553 4220 		.string	"USB Host Initialized"
+ 149      486F 7374 
+ 149      2049 6E69 
+ 149      7469 616C 
+ 149      697A 6564 
+ 150               		.text
+ 151               	.global	_Z17lcd_host_dtr_waitv
+ 153               	_Z17lcd_host_dtr_waitv:
+ 154               	.LFB67:
+ 155               	.LM17:
+ 156               	/* prologue: function */
+ 157               	/* frame size = 0 */
+ 158               	.L7:
+ 159               	.LM18:
+ 160 00b8 0E94 0000 		call usb_serial_get_control
+ 161 00bc 80FF      		sbrs r24,0
+ 162 00be 00C0      		rjmp .L7
+ 163               	.LM19:
+ 164 00c0 80E0      		ldi r24,lo8(nokia)
+ 165 00c2 90E0      		ldi r25,hi8(nokia)
+ 166 00c4 0E94 0000 		call _ZN7PCD85445clearEv
+ 167               	.LM20:
+ 168 00c8 80E0      		ldi r24,lo8(nokia)
+ 169 00ca 90E0      		ldi r25,hi8(nokia)
+ 170 00cc 60E0      		ldi r22,lo8(0)
+ 171 00ce 40E0      		ldi r20,lo8(0)
+ 172 00d0 0E94 0000 		call _ZN7PCD85449setCursorEhh
+ 173               	.LM21:
+ 174 00d4 80E0      		ldi r24,lo8(nokia)
+ 175 00d6 90E0      		ldi r25,hi8(nokia)
+ 176 00d8 60E0      		ldi r22,lo8(.LC4)
+ 177 00da 70E0      		ldi r23,hi8(.LC4)
+ 178 00dc 0E94 0000 		call _ZN5Print5printEPKc
+ 179               	.LM22:
+ 180 00e0 80E0      		ldi r24,lo8(nokia)
+ 181 00e2 90E0      		ldi r25,hi8(nokia)
+ 182 00e4 0E94 0000 		call _ZN7PCD85447displayEv
+ 183               	/* epilogue start */
+ 184               	.LM23:
+ 185 00e8 0895      		ret
+ 186               	.LFE67:
+ 188               		.data
+ 189               	.LC5:
+ 190 0023 5553 4220 		.string	"USB Host Detected"
+ 190      486F 7374 
+ 190      2044 6574 
+ 190      6563 7465 
+ 190      6400 
+ 191               	.LC6:
+ 192 0035 5761 6974 		.string	"Waiting for host software"
+ 192      696E 6720 
+ 192      666F 7220 
+ 192      686F 7374 
+ 192      2073 6F66 
+ 193               		.text
+ 194               	.global	_Z18lcd_usb_found_waitv
+ 196               	_Z18lcd_usb_found_waitv:
+ 197               	.LFB66:
+ 198               	.LM24:
+ 199               	/* prologue: function */
+ 200               	/* frame size = 0 */
+ 201               	.L11:
+ 202               	.LM25:
+ 203 00ea 0E94 0000 		call usb_configured
+ 204 00ee 8823      		tst r24
+ 205 00f0 01F0      		breq .L11
+ 206               	.LM26:
+ 207 00f2 80E0      		ldi r24,lo8(nokia)
+ 208 00f4 90E0      		ldi r25,hi8(nokia)
+ 209 00f6 0E94 0000 		call _ZN7PCD85445clearEv
+ 210               	.LM27:
+ 211 00fa 80E0      		ldi r24,lo8(nokia)
+ 212 00fc 90E0      		ldi r25,hi8(nokia)
+ 213 00fe 60E0      		ldi r22,lo8(0)
+ 214 0100 40E0      		ldi r20,lo8(0)
+ 215 0102 0E94 0000 		call _ZN7PCD85449setCursorEhh
+ 216               	.LM28:
+ 217 0106 80E0      		ldi r24,lo8(nokia)
+ 218 0108 90E0      		ldi r25,hi8(nokia)
+ 219 010a 60E0      		ldi r22,lo8(.LC5)
+ 220 010c 70E0      		ldi r23,hi8(.LC5)
+ 221 010e 0E94 0000 		call _ZN5Print5printEPKc
+ 222               	.LM29:
+ 223 0112 80E0      		ldi r24,lo8(nokia)
+ 224 0114 90E0      		ldi r25,hi8(nokia)
+ 225 0116 60E0      		ldi r22,lo8(0)
+ 226 0118 49E1      		ldi r20,lo8(25)
+ 227 011a 0E94 0000 		call _ZN7PCD85449setCursorEhh
+ 228               	.LM30:
+ 229 011e 80E0      		ldi r24,lo8(nokia)
+ 230 0120 90E0      		ldi r25,hi8(nokia)
+ 231 0122 60E0      		ldi r22,lo8(.LC6)
+ 232 0124 70E0      		ldi r23,hi8(.LC6)
+ 233 0126 0E94 0000 		call _ZN5Print5printEPKc
+ 234               	.LM31:
+ 235 012a 80E0      		ldi r24,lo8(nokia)
+ 236 012c 90E0      		ldi r25,hi8(nokia)
+ 237 012e 0E94 0000 		call _ZN7PCD85447displayEv
+ 238               	/* epilogue start */
+ 239               	.LM32:
+ 240 0132 0895      		ret
+ 241               	.LFE66:
+ 243               	.global	_Z8lcd_initv
+ 245               	_Z8lcd_initv:
+ 246               	.LFB65:
+ 247               	.LM33:
+ 248               	/* prologue: function */
+ 249               	/* frame size = 0 */
+ 250               	.LM34:
+ 251 0134 80E0      		ldi r24,lo8(nokia)
+ 252 0136 90E0      		ldi r25,hi8(nokia)
+ 253 0138 0E94 0000 		call _ZN7PCD85444initEv
+ 254               	/* epilogue start */
+ 255               	.LM35:
+ 256 013c 0895      		ret
+ 257               	.LFE65:
+ 259               	.global	nokia
+ 260               	.global	nokia
+ 261               		.section .bss
+ 264               	nokia:
+ 265 0000 0000 0000 		.skip 11,0
+ 265      0000 0000 
+ 265      0000 00
+ 322               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 oven_lcd.cpp
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:2      *ABS*:0000003f __SREG__
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:3      *ABS*:0000003e __SP_H__
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:4      *ABS*:0000003d __SP_L__
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:5      *ABS*:00000034 __CCP__
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:17     .text:00000000 _GLOBAL__I_nokia
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:264    .bss:00000000 nokia
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:60     .text:0000001e _Z10lcd_updatev
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:153    .text:000000b8 _Z17lcd_host_dtr_waitv
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:196    .text:000000ea _Z18lcd_usb_found_waitv
+/var/folders/kn/knh7ekmFFz0em4Zfa6aqLE+++TI/-Tmp-//ccMahjPH.s:245    .text:00000134 _Z8lcd_initv
+
+UNDEFINED SYMBOLS
+_ZN7PCD8544C1Eaaaaa
+__do_global_ctors
+_ZN7PCD85445clearEv
+_ZN7PCD85449setCursorEhh
+_ZN5Print5printEPKc
+temp_t
+_ZN5Print5printEi
+_ZN5Print5printEh
+_ZN7PCD85447displayEv
+usb_serial_get_control
+usb_configured
+_ZN7PCD85444initEv
+__do_copy_data
+__do_clear_bss
