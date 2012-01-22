@@ -17,9 +17,9 @@ extern int16_t temp_t, temp_b;
 
 // Note pins are in arduino format
 // Serial clock out (SCLK) - PF6
-// Serial data out (DIN) - PF5
+// Serial data out (DIN/MOSI) - PF5
 // Data/Command select (D/C) - PF4
-// LCD chip select (CS) - PF1
+// LCD chip select (CS or SCE) - PF1
 // LCD reset (RST) - PF0
 // static initialization is gross but avr-g++ doesn't seem to do new/delete
 PCD8544 nokia(17,18,19,20,21);
