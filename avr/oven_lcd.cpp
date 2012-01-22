@@ -8,6 +8,7 @@
 #include "usb_serial.h"
 #include "arduino/PCD8544.h"
 #include "oven_lcd.h"
+#include "arduino/core_pins.h"
 
 
 
@@ -22,7 +23,7 @@ extern int16_t temp_t, temp_b;
 // LCD chip select (CS or SCE) - PF1
 // LCD reset (RST) - PF0
 // static initialization is gross but avr-g++ doesn't seem to do new/delete
-PCD8544 nokia(17,18,19,20,21);
+PCD8544 nokia(PIN_F6,PIN_F5,PIN_F4,PIN_F1,PIN_F0);
 
 
 // setup nokia
