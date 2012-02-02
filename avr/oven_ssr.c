@@ -72,14 +72,14 @@ static void _ssr_output(uint8_t top, uint8_t bot)
     if(ssr_shutdown)
         top = bot = 0;
 
-    // top is PD6, bottom is PD7.  System is active-low
-    if(!top)
+    // top is PD6, bottom is PD7.  System is active-high
+    if(top)
         PORTD |= _BV(6);
     else
         PORTD &= ~(_BV(6));
 
 
-    if(!bot)
+    if(bot)
         PORTD |= _BV(7);
     else
         PORTD &= ~(_BV(7));
