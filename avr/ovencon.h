@@ -57,6 +57,8 @@ extern uint8_t is_usb_ready(void);
 
 // Thermocouple settings
 
+//#define USE_THERMOCOUPLE
+
 // Do we have 2 thermocouple chips?  If not, top=bottom
 //#define BOTTOM_THERM
 
@@ -81,6 +83,12 @@ extern uint8_t is_usb_ready(void);
 #define DEFAULT_K_I   3
 #define DEFAULT_K_D   13
 
+
+// use the thermistor instead of the thermocouple?  
+#define USE_THERMISTOR
+
+// use ADC 7
+#define THERMISTOR_CHANNEL 7
 
 #endif
 

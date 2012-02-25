@@ -40,7 +40,7 @@
 #include "oven_lcd.h"
 #include "max6675.h"
 #include "arduino/PCD8544.h"
-
+#include "thermistor.h"
 
 
 // commands/config to controller from serial
@@ -96,7 +96,7 @@ uint16_t time;
 
 int16_t temp_t,temp_b; // last read temps
 
-uint8_t should_update_lcd;
+volatile uint8_t should_update_lcd;
 
 
 char tx_msg[255];
@@ -160,6 +160,9 @@ void oven_input(int16_t *top, int16_t *bot)
 {
     if( !mode_fake_in )
     {
+      
+#ifdef USE_THERMOCOUPLE
+        
     	*top = max6675_read(0);
 
 #ifndef BOTTOM_THERM
@@ -167,6 +170,12 @@ void oven_input(int16_t *top, int16_t *bot)
 #else
         *bot = max6675_read(1);
 #endif
+        
+#endif  
+        
+// thermistor reads from the main loop for now since the ADC read is a bit slow
+        
+        
     }
     else
     {
@@ -206,9 +215,17 @@ void oven_setup(void)
     pid_reset();
     profile_reset();
     ssr_setup();
+    
+#ifdef USE_THERMOCOUPLE
     max6675_setup();
 
     max6675_start();
+#endif
+    
+#ifdef USE_THERMISTOR
+    thermistor_setup();
+#endif
+    
     timing_setup();
 }
 
@@ -427,7 +444,7 @@ int main(void)
             if (should_update_lcd){ // a full LCD update takes approx 2ms @16mhz as timed
                 lcd_update();
                 should_update_lcd=0;
-            }
+            } 
         }
 
         if (is_usb_ready()){
@@ -450,6 +467,18 @@ int main(void)
                 }
             }
         }
+        
+#ifdef USE_THERMISTOR        
+      // only support top therm for thermistor.  We use temp_b as our temporary variable
+      temp_b=thermistor_read();
+      if (temp_b!=temp_t){
+        cli(); // prevent half reads
+        temp_t=temp_b;
+        sei();
+        should_update_lcd=1;
+      }      
+#endif    
+        
     }
 }
 

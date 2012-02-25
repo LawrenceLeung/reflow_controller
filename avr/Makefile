@@ -81,7 +81,7 @@ OBJDIR = .
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = $(TARGET).cpp oven_lcd.cpp arduino/WInterrupts.cpp  arduino/wiring.cpp arduino/PCD8544.cpp arduino/Print.cpp arduino/WString.cpp
+CPPSRC = $(TARGET).cpp thermistor.cpp oven_lcd.cpp arduino/WInterrupts.cpp  arduino/wiring.cpp arduino/PCD8544.cpp arduino/Print.cpp arduino/WString.cpp
 
 
 # List Assembler source files here.

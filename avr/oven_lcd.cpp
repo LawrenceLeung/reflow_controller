@@ -62,12 +62,14 @@ void lcd_update(){
     nokia.setCursor(0, 0);
     nokia.print("Temp: ");
     nokia.print(temp_t>>2); // temp is in .25C
-    nokia.print(".");
+    nokia.print('.');
     uint8_t decimal=(temp_t & 0x03)*25;
     nokia.print(decimal);
     if (!decimal){
-      nokia.print("00"); // 2 zeros
+      nokia.print('0');
+      nokia.print('0'); // 2 zeros
     }
+    
     nokia.print("C");
     nokia.display();
 
