@@ -28,6 +28,7 @@ Here's the expected pin configuration:
 * <code>D2,D3</code> Uart1 (Reserved)
 * <code>F0,1,4,5,6</code> LCD RST,CS/SCE,D/C,DIN/MOSI,SCLK  (Note: this is through a 5v to 3.3v 4050D level shifter!!)
 * <code>F7</code> Thermistor ADC
+* <code>C7</code> Fan PWM
 * <code>D6,D7</code> Solid state relay Top, Bottom (Active-High)
 * <code>E6</code> Status LED (active high, to match arduino conventions unfortunately)
 

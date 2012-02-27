@@ -211,10 +211,11 @@ void oven_setup(void)
     tx_len          = 0;
     should_update_lcd=0;
 
+    ssr_setup();
     lcd_init();
     pid_reset();
     profile_reset();
-    ssr_setup();
+
     
 #ifdef USE_THERMOCOUPLE
     max6675_setup();
