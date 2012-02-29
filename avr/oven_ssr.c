@@ -67,6 +67,10 @@ const uint8_t ssr_profile[32][30] PROGMEM =
 
 volatile uint8_t ssr_shutdown = 1;
 
+#define SSR_PIN_TOP 6
+#define SSR_PIN_BOTTOM 7
+
+
 static void _ssr_output(uint8_t top, uint8_t bot)
 {
     if(ssr_shutdown)
@@ -74,15 +78,15 @@ static void _ssr_output(uint8_t top, uint8_t bot)
 
     // top is PD6, bottom is PD7.  System is active-high
     if(top)
-        PORTD |= _BV(6);
+        PORTD |= _BV(SSR_PIN_TOP);
     else
-        PORTD &= ~(_BV(6));
+        PORTD &= ~(_BV(SSR_PIN_TOP));
 
 
     if(bot)
-        PORTD |= _BV(7);
+        PORTD |= _BV(SSR_PIN_BOTTOM);
     else
-        PORTD &= ~(_BV(7));
+        PORTD &= ~(_BV(SSR_PIN_BOTTOM));
 
 }
 
@@ -94,14 +98,13 @@ volatile uint8_t ssr_bot_val;
 
 void ssr_setup(void)
 {
+    DDRD|=_BV(SSR_PIN_TOP)|_BV(SSR_PIN_BOTTOM);
     ssr_shutdown = 0;
     _ssr_output(0,0);
     ssr_top_idx = 0;
     ssr_bot_idx = 1; // shift by half of an AC cycle
     ssr_top_val = 0;
     ssr_bot_val = 0;
-
-    DDRD|=_BV(6)|_BV(7);
 }
 
 void ssr_set(uint8_t top, uint8_t bot)
