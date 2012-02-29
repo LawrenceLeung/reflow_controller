@@ -186,6 +186,13 @@ void oven_input(int16_t *top, int16_t *bot)
 
 void oven_setup(void)
 {
+    
+    
+    // hold CS high until init is complete
+    DDRB|=_BV(0);
+    PORTB|=_BV(0);
+    
+    
     state = ST_IDLE;
 
     mode_fake_out   = 0;
@@ -405,17 +412,13 @@ int main(void)
 #endif
 
 
-    // hold CS high until init
-    DDRB|=_BV(0);
-    PORTB|=_BV(0);
-
 
     // initialize
     oven_setup();
 
 
     // sleep.  Makes the USB less cranky
-    _delay_ms(1000);
+    _delay_ms(2000);
 
     // wait for usb to initialize
     usb_init();
