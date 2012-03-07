@@ -57,7 +57,7 @@ extern uint8_t is_usb_ready(void);
 
 // Thermocouple settings
 
-//#define USE_THERMOCOUPLE
+#define USE_THERMOCOUPLE
 
 // Do we have 2 thermocouple chips?  If not, top=bottom
 //#define BOTTOM_THERM
@@ -80,12 +80,12 @@ extern uint8_t is_usb_ready(void);
 // default pid settings.  The term is actually 2^n for simplicity of calculation. These nubers should probably be <15
 
 #define DEFAULT_K_P   13
-#define DEFAULT_K_I   3
+#define DEFAULT_K_I   4
 #define DEFAULT_K_D   13
 
 
 // use the thermistor instead of the thermocouple?  
-#define USE_THERMISTOR
+//#define USE_THERMISTOR
 
 // use ADC 7
 #define THERMISTOR_CHANNEL 7
