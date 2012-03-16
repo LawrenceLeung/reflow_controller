@@ -40,6 +40,10 @@ void ssr_update(void);
 void ssr_set(uint8_t top, uint8_t bot);
 void ssr_fault(void);
 
+// temporarily here
+void fan_setup(void);
+
+void fan_update(uint8_t pwm);
 
 
 

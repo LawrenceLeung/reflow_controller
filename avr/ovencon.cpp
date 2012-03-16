@@ -89,12 +89,13 @@ volatile uint8_t comm_cmd;
 
 const char *state_names[5] = { "fault","idle","run","done","pause" };
 
-uint8_t state = ST_FAULT;
+volatile uint8_t state = ST_FAULT;
 
-int16_t target;
-uint16_t time;
+volatile int16_t target;
+volatile uint16_t time;
+volatile uint8_t fan_pwm;
 
-int16_t temp_t,temp_b; // last read temps
+volatile int16_t temp_t,temp_b; // last read temps
 
 volatile uint8_t should_update_lcd;
 
@@ -156,7 +157,7 @@ void oven_output(uint8_t top, uint8_t bot)
     }
 }
 
-void oven_input(int16_t *top, int16_t *bot)
+void oven_input(volatile int16_t *top,volatile int16_t *bot)
 {
     if( !mode_fake_in )
     {
@@ -183,6 +184,8 @@ void oven_input(int16_t *top, int16_t *bot)
         *bot = fake_temp_b;
     }
 }
+
+
 
 void oven_setup(void)
 {
@@ -219,6 +222,7 @@ void oven_setup(void)
     should_update_lcd=0;
 
     ssr_setup();
+    fan_setup();
     lcd_init();
     pid_reset();
     profile_reset();
@@ -339,6 +343,7 @@ void oven_update_4hz(void)
     }
 
     oven_output(cmd_t,cmd_b);
+    fan_update(fan_pwm);
 
     // produce status update message
     // (provided previous update has already been sent)

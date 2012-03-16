@@ -31,7 +31,7 @@ volatile uint8_t k_p;
 volatile uint8_t k_i;
 volatile uint8_t k_d;
 
-const uint8_t k_div = 8;
+const uint8_t k_div = 9;
 #define k_delay 40
 
 // state

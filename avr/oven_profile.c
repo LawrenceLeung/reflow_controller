@@ -30,19 +30,21 @@ typedef struct
 {
     uint16_t    delta_time; // time steps to run at temp_rate (0.25s each)
     int16_t     temp_rate;  // rate of temperature change (1/1024 degrees per time step)
+    uint8_t     fan_pwm;
 } s_profile_step;
 
-#define STEPS 7
+#define STEPS 8
 
 // profile table entries computed in reflow_profiles.ods spreadsheet
-const s_profile_step profile[STEPS] = {
-    { 960,   64 },
-    { 720,  135 },
-    { 120,  213 },
-    { 180,   85 },
-    { 120,    0 },
-    { 180, -228 },
-    { 360, -441 }
+const s_profile_step profile[STEPS] = {    
+    { 360, 242,0},
+    { 360, 114,0},
+    { 120, 256,0},
+    { 120, 282,0},    
+    { 60, 85, 0},
+    { 40, -128, 128},
+    { 60, -563, 255},
+    { 240, -661, 255}
 };
 
 uint8_t     profile_step;   // current step
@@ -56,7 +58,11 @@ void profile_reset(void)
     profile_temp    = (25*1024); // room temp start point
 }
 
-uint8_t profile_update(int16_t *target)
+
+extern uint8_t fan_pwm;
+
+
+uint8_t profile_update(volatile int16_t *target)
 {
     if(profile_step >= STEPS)
         return 1;
@@ -67,6 +73,7 @@ uint8_t profile_update(int16_t *target)
         profile_time = profile[profile_step].delta_time;
 
     *target = profile_temp >> 8;
+    fan_pwm=profile[profile_step].fan_pwm;
 
     return 0;
 }

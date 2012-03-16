@@ -136,3 +136,21 @@ void ssr_update(void)
 
 }
 
+#define FAN_PIN 7
+
+extern uint8_t fan_pwm;
+
+// temporarily here
+void fan_setup(void) {
+    DDRC |= _BV(FAN_PIN);
+    PORTC &= ~(_BV(FAN_PIN));
+    fan_pwm=0;
+}
+
+void fan_update(uint8_t pwm){
+    
+    if(pwm)
+        PORTC |= _BV(FAN_PIN);
+    else
+        PORTC &= ~(_BV(FAN_PIN));
+}

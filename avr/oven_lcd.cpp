@@ -13,7 +13,7 @@
 
 
 
-extern int16_t temp_t, temp_b;
+extern volatile int16_t temp_t, temp_b;
 
 
 // Note pins are in arduino format
@@ -61,16 +61,11 @@ void lcd_update(){
     nokia.clear();
     nokia.setCursor(0, 0);
     nokia.print("Temp: ");
+    
     nokia.print(temp_t>>2); // temp is in .25C
-    nokia.print('.');
-    uint8_t decimal=(temp_t & 0x03)*25;
-    nokia.print(decimal);
-    if (!decimal){
-      nokia.print('0');
-      nokia.print('0'); // 2 zeros
-    }
     
     nokia.print("C");
+
     nokia.display();
 
 

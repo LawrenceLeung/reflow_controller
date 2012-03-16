@@ -35,7 +35,7 @@ extern "C"{
 #include <stdint.h>
 
 void profile_reset(void);
-uint8_t profile_update(int16_t *target);
+uint8_t profile_update(volatile int16_t *target);
 
 
 

@@ -79,9 +79,9 @@ extern uint8_t is_usb_ready(void);
 
 // default pid settings.  The term is actually 2^n for simplicity of calculation. These nubers should probably be <15
 
-#define DEFAULT_K_P   13
-#define DEFAULT_K_I   4
-#define DEFAULT_K_D   13
+#define DEFAULT_K_P   14
+#define DEFAULT_K_I   5
+#define DEFAULT_K_D   12
 
 
 // use the thermistor instead of the thermocouple?  
@@ -89,6 +89,14 @@ extern uint8_t is_usb_ready(void);
 
 // use ADC 7
 #define THERMISTOR_CHANNEL 7
+
+
+
+#define READ(U, N) ((U) >> (N) & 1u)
+#define SET(U, N) ((void)((U) |= 1u << (N)))
+#define CLR(U, N) ((void)((U) &= ~(1u << (N))))
+#define FLIP(U, N) ((void)((U) ^= 1u << (N)))
+
 
 #endif
 
