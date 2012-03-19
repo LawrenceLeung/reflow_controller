@@ -138,7 +138,7 @@ void ssr_update(void)
 
 #define FAN_PIN 7
 
-extern uint8_t fan_pwm;
+extern volatile uint8_t fan_pwm;
 
 // temporarily here
 void fan_setup(void) {

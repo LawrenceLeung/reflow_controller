@@ -25,6 +25,7 @@
  */
 
 #include"oven_profile.h"
+#include "ovencon.h"
 
 typedef struct
 {
@@ -35,8 +36,10 @@ typedef struct
 
 #define STEPS 8
 
+
 // profile table entries computed in reflow_profiles.ods spreadsheet
 const s_profile_step profile[STEPS] = {    
+#ifndef CALIBRATION_PROFILE
     { 360, 242,0},
     { 360, 114,0},
     { 120, 256,0},
@@ -45,7 +48,19 @@ const s_profile_step profile[STEPS] = {
     { 40, -128, 128},
     { 60, -563, 255},
     { 240, -661, 255}
+#else
+// calibration profile
+    {400,371,0},
+    {40, 256,0},
+    {60, 0, 0},
+    {40, -256,255},
+    {60, 0,0},
+    {40, 256,0},
+    {60,	0,0 },
+    {40,-256, 255}
+#endif
 };
+
 
 uint8_t     profile_step;   // current step
 uint16_t    profile_time;   // time until next step
