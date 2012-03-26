@@ -80,9 +80,9 @@ extern uint8_t is_usb_ready(void);
 // default pid settings.  The term is actually 2^n for simplicity of calculation. These nubers should probably be <15
 
 /// This is calibrated for a pizza oven
-#define DEFAULT_K_P   13
-#define DEFAULT_K_I   8
-#define DEFAULT_K_D   2
+#define DEFAULT_K_P   12
+#define DEFAULT_K_I   4
+#define DEFAULT_K_D   5
 
 
 // use the thermistor instead of the thermocouple?  

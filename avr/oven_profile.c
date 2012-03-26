@@ -40,14 +40,15 @@ typedef struct
 // profile table entries computed in reflow_profiles.ods spreadsheet
 const s_profile_step profile[STEPS] = {    
 #ifndef CALIBRATION_PROFILE
-    { 360, 242,0},
-    { 360, 114,0},
-    { 120, 256,0},
-    { 120, 282,0},    
-    { 60, 85, 0},
-    { 40, -128, 128},
-    { 60, -563, 255},
-    { 240, -661, 255}
+    
+    { 360,	242, 0},
+    { 320,	128, 0},
+    { 180,	171, 0},
+    { 160,	211, 0},
+    { 80,	115, 0},
+    { 40,	-230, 255},
+    { 60,	-563, 200},
+    { 240,	-661, 200}
 #else
 // calibration profile
     {400,371,0},
